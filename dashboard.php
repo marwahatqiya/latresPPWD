@@ -11,12 +11,12 @@ if (!isset($_SESSION['id'])) {
 // menentukan halaman aktif
 $currentPage = "home";
 
-// variabel filter lab
-$filterLab = "";
+// variabel filter jam
+$filterJam = "";
 
-// mengecek filter dr url
-if (isset($_GET['lab'])) {
-    $filterLab = $_GET['lab'];
+// mengecek filter jam dari url
+if (isset($_GET['jam'])) {
+    $filterJam = $_GET['jam'];
 }
 
 // array waktu
@@ -37,10 +37,6 @@ if (isset($_GET['search'])) {
 // ambil data laboratorium berdasarkan pencarian
 $querySQL = "SELECT * FROM laboratorium WHERE nama_lab LIKE '%$search%'";
 
-// filter lab, .= artinya menambahkan string ke var sebelumnya
-if ($filterLab != "") {
-    $querySQL .= " AND id = '$filterLab'";
-}
 
 // menjalankan query lab
 $queryLab = mysqli_query($konek, $querySQL);
@@ -60,10 +56,10 @@ while ($pinjam = mysqli_fetch_assoc($queryPinjam)) {
 $queryAjuan = mysqli_query(
     $konek,
     "SELECT peminjaman.*, laboratorium.nama_lab 
-FROM peminjaman 
-JOIN laboratorium 
-ON peminjaman.laboratorium_id = laboratorium.id 
-ORDER BY created_at DESC LIMIT 5"
+    FROM peminjaman 
+    JOIN laboratorium 
+    ON peminjaman.laboratorium_id = laboratorium.id 
+    ORDER BY created_at DESC LIMIT 5"
 );
 ?>
 <!DOCTYPE html>
@@ -309,7 +305,7 @@ ORDER BY created_at DESC LIMIT 5"
             flex-wrap: wrap;
             gap: 30px;
             border-radius: 12px;
-            
+
         }
 
         .ajuan-card {
@@ -469,33 +465,35 @@ ORDER BY created_at DESC LIMIT 5"
             <input type="text" name="search" class="search-input" placeholder="Cari laboratorium"
                 value="<?= $search ?>">
 
-            <!-- dropdown filter -->
+            <!-- tombol cari -->
+            <button type="submit" class="filter-btn">
+                Cari
+            </button>
+
+            <!-- dropdown filter jam -->
             <div class="dropdown">
 
                 <!-- tombol filter -->
                 <button class="filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    Filter
+                    Filter Jam
                 </button>
 
                 <!-- isi kalo tombol filter dipencet -->
                 <ul class="dropdown-menu">
                     <li>
                         <a class="dropdown-item" href="dashboard.php">
-                            Semua Lab
+                            Semua Jam
                         </a>
                     </li>
 
-                    <!-- mengambil data nama lab -->
-                    <?php
-                    $queryFilter = mysqli_query($konek, "SELECT * FROM laboratorium");
-                    // ngeloop nama lab di database jadi ga ditulis satu-satu
-                    while ($filter = mysqli_fetch_assoc($queryFilter)) {
-                        ?>
+                    <!-- loop jam -->
+                    <?php foreach ($waktu as $jam) { ?>
+
                         <!-- nampilin nama lab buat di filter -->
                         <li>
-                            <a class="dropdown-item" href="dashboard.php?lab= <?= $filter['id']; ?> ">
-                                <?= htmlspecialchars($filter['nama_lab']); ?>
+                            <a class="dropdown-item" href="dashboard.php?search=<?= $search ?>&jam=<?= $jam ?>">
+                                <?= $jam ?>
                             </a>
                         </li>
                     <?php } ?>
@@ -519,8 +517,17 @@ ORDER BY created_at DESC LIMIT 5"
                 // mengecek jadwal dipinjam, berdasarkan jam
                 $dipinjam = $dataPinjam[$lab['id']] ?? [];
 
-                // mengecek jadwal tersedia, dgn cara membandingkan
+                // mengecek jadwal tersedia
                 $tersedia = array_diff($waktu, $dipinjam);
+
+                // filter jam
+                if ($filterJam != "") {
+
+                    // mencari jam yg sesuai filter
+                    $tersedia = array_filter($tersedia, function ($jam) use ($filterJam) {
+                        return $jam == $filterJam;
+                    });
+                }
 
                 // jika jadwal penuh semua, ga ada yg di tampilin, lanjut ke loop berikutnya
                 if (count($tersedia) == 0) {
@@ -584,7 +591,7 @@ ORDER BY created_at DESC LIMIT 5"
                     <div class="time-group">
 
                         <div class="time-box">
-                            <?= $ajuan['waktu'] ?>
+                            <?= substr($ajuan['waktu'], 0, 5) ?>
                         </div>
 
                     </div>

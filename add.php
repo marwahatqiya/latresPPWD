@@ -41,8 +41,9 @@ if (isset($_POST['submit'])) {
 
     // mengecek hasil query
     if (mysqli_num_rows($cek) > 0) {
-        $_SESSION['error'] = "Waktu sudah dipinjam!";
-        unset($_SESSION['error']);
+        $_SESSION['error'] = "Lab sudah dipinjam di hari dan jam tersebut!";
+        header("Location: add.php");
+        exit;
         
         // kalo masi kosong
     } else {
