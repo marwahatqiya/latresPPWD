@@ -166,12 +166,8 @@ $query = mysqli_query($konek,
 
     <!-- navbar -->
     <div class="navbar-custom">
-
         <!-- logo -->
-        <div class="logo">
-            C
-        </div>
-
+        <div class="logo">C</div>
         <!-- menu -->
         <div class="menu">
             <a href="dashboard.php">Home</a>
@@ -179,12 +175,10 @@ $query = mysqli_query($konek,
             <a href="riwayat.php" class="active">Riwayat</a>
             <a href="logout.php">Logout</a>
         </div>
-
     </div>
 
     <!-- history -->
     <div class="history-section">
-        
         <!-- judul -->
         <h1 class="history-title">
             Cek riwayat peminjamanmu disini
@@ -203,11 +197,8 @@ $query = mysqli_query($konek,
             <?php while ($data = mysqli_fetch_assoc($query)) { ?>
 
                 <div class="history-item">
-
                     <!-- menampilkan isi data -->
-                    <div>
-                        <?= $data['id']; ?>
-                    </div>
+                    <div><?= $data['id']; ?></div>
 
                     <div>
                         <?= htmlspecialchars($data['nama_lab']); ?>
@@ -217,15 +208,10 @@ $query = mysqli_query($konek,
                         <?= date('d/m/Y', strtotime($data['tanggal'])); ?>
                         <?= substr($data['waktu'], 0, 5); ?>
                     </div>
-
                 </div>
-
             <?php } ?>
-
         </div>
-
     </div>
-
 </body>
 
 </html>

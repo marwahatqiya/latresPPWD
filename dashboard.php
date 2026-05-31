@@ -20,12 +20,7 @@ if (isset($_GET['jam'])) {
 }
 
 // array waktu
-$waktu = [
-    "08:00",
-    "10:30",
-    "13:00",
-    "15:30",
-];
+$waktu = ["08:00","10:30","13:00","15:30",];
 
 //search
 $search = "";
@@ -37,12 +32,13 @@ if (isset($_GET['search'])) {
 // ambil data laboratorium berdasarkan pencarian
 $querySQL = "SELECT * FROM laboratorium WHERE nama_lab LIKE '%$search%'";
 
-
 // menjalankan query lab
 $queryLab = mysqli_query($konek, $querySQL);
 
 // ambil peminjaman hari ini
-$queryPinjam = mysqli_query($konek, "SELECT laboratorium_id, LEFT(waktu, 5) as waktu FROM peminjaman WHERE tanggal = CURDATE()");
+$queryPinjam = mysqli_query($konek, 
+"SELECT laboratorium_id, LEFT(waktu, 5) as waktu 
+FROM peminjaman WHERE tanggal = CURDATE()");
 
 // simpan data peminjaman ke array
 $dataPinjam = [];
@@ -53,14 +49,12 @@ while ($pinjam = mysqli_fetch_assoc($queryPinjam)) {
 }
 
 // ambil 5 ajuan baru
-$queryAjuan = mysqli_query(
-    $konek,
+$queryAjuan = mysqli_query($konek,
     "SELECT peminjaman.*, laboratorium.nama_lab 
     FROM peminjaman 
     JOIN laboratorium 
     ON peminjaman.laboratorium_id = laboratorium.id 
-    ORDER BY created_at DESC LIMIT 5"
-);
+    ORDER BY created_at DESC LIMIT 5");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -437,7 +431,6 @@ $queryAjuan = mysqli_query(
 </head>
 
 <body>
-
     <div class="container-custom">
 
         <!-- navbar -->
@@ -546,22 +539,16 @@ $queryAjuan = mysqli_query(
                     </div>
 
                     <div class="time-group">
-
                         <!-- menampilkan jam tersedia -->
                         <?php foreach ($tersedia as $jam) { ?>
 
                             <div class="time-box">
                                 <?= $jam ?>
                             </div>
-
                         <?php } ?>
-
                     </div>
-
                 </div>
-
             <?php } ?>
-
         </div>
 
         <!-- ajuan terbaru -->
@@ -573,57 +560,35 @@ $queryAjuan = mysqli_query(
             <?php while ($ajuan = mysqli_fetch_assoc($queryAjuan)) { ?>
 
                 <div class="ajuan-card">
-
                     <div class="lab-header">
-
                         <i class="bi bi-display"></i>
-
                         <h5>
                             <?= htmlspecialchars($ajuan['nama_lab']) ?>
                         </h5>
-
                     </div>
-
-                    <p>
-                        <?= $ajuan['tanggal'] ?>
-                    </p>
-
+                    <p> <?= $ajuan['tanggal'] ?> </p>
                     <div class="time-group">
-
                         <div class="time-box">
                             <?= substr($ajuan['waktu'], 0, 5) ?>
                         </div>
-
                     </div>
 
                     <div class="button-group">
-
                         <!-- tombol hapus -->
                         <a href="delete.php?id=<?= $ajuan['id'] ?>" class="btn-hapus">
-                            HAPUS
-                        </a>
+                            HAPUS </a>
 
                         <!-- tombol edit -->
                         <a href="edit.php?id=<?= $ajuan['id'] ?>" class="btn-edit">
-                            EDIT
-                        </a>
-
+                            EDIT </a>
                     </div>
-
                 </div>
-
             <?php } ?>
 
-
             <!-- tombol tambah -->
-            <a href="add.php" class="btn-add">
-                +
-            </a>
-
+            <a href="add.php" class="btn-add">+ </a>
         </div>
-
     </div>
-
 </body>
 
 </html>

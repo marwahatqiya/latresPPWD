@@ -1,6 +1,5 @@
 <?php
-session_start();
-require "koneksi.php";
+session_start(); require "koneksi.php";
 
 // cek login
 if (!isset($_SESSION['id'])) {
@@ -9,12 +8,7 @@ if (!isset($_SESSION['id'])) {
 }
 
 // array waktu
-$waktu = [
-    "08:00",
-    "10:30",
-    "13:00",
-    "15:30"
-];
+$waktu = [ "08:00", "10:30", "13:00", "15:30"];
 
 // cek id
 if (!isset($_GET['id'])) {
@@ -25,55 +19,38 @@ if (!isset($_GET['id'])) {
 $id = $_GET['id'];
 
 // ambil data peminjaman
-$query = mysqli_query(
-    $konek,
-    "SELECT * FROM peminjaman
-    WHERE id = '$id'"
+$query = mysqli_query($konek,
+    "SELECT * FROM peminjaman WHERE id = '$id'"
 );
 
+// ambil data hasil query jadi array
 $data = mysqli_fetch_assoc($query);
 
 // ambil data laboratorium
-$queryLab = mysqli_query(
-    $konek,
-    "SELECT * FROM laboratorium"
-);
+$queryLab = mysqli_query( $konek, "SELECT * FROM laboratorium");
 
 // update data
 if (isset($_POST['submit'])) {
-
     $laboratorium_id = $_POST['laboratorium_id'];
     $tanggal = $_POST['tanggal'];
     $waktu_pilih = $_POST['waktu'];
 
     // cek waktu sudah dipakai atau belum
-    $cek = mysqli_query(
-        $konek,
-        "SELECT * FROM peminjaman
+    $cek = mysqli_query($konek,"SELECT * FROM peminjaman
         WHERE laboratorium_id = '$laboratorium_id'
         AND tanggal = '$tanggal'
-        AND waktu = '$waktu_pilih'
-        AND id != '$id'"
+        AND waktu = '$waktu_pilih'AND id != '$id'"
     );
 
     if (mysqli_num_rows($cek) > 0) {
-
         $_SESSION['error'] = "Waktu yang dipilih sudah tidak tersedia";
-
-    } else {
-
-        mysqli_query(
-            $konek,
-            "UPDATE peminjaman
-            SET
-            laboratorium_id = '$laboratorium_id',
-            tanggal = '$tanggal',
-            waktu = '$waktu_pilih'
+        unset($_SESSION['error']);
+    } else { mysqli_query($konek, "UPDATE peminjaman
+            SET laboratorium_id = '$laboratorium_id', 
+            tanggal = '$tanggal', waktu = '$waktu_pilih'
             WHERE id = '$id'"
         );
-
         $_SESSION['success'] = "Data berhasil diupdate";
-
         header("Location: dashboard.php");
         exit;
     }
@@ -263,129 +240,86 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
-
     <!-- navbar -->
     <div class="navbar-custom">
-
-        <div class="logo">
-            C
-        </div>
-
+        <div class="logo">C</div>
         <div class="menu">
             <a href="dashboard.php">Home</a>
             <a href="riwayat.php">Riwayat</a>
             <a href="logout.php">Logout</a>
         </div>
-
     </div>
 
     <!-- form -->
     <div class="form-section">
 
         <div class="form-box">
-
-            <h1 class="form-title">
-                Edit Peminjaman
-            </h1>
+            <h1 class="form-title">Edit Peminjaman</h1>
 
             <!-- alert -->
             <?php if (isset($_SESSION['error'])) { ?>
-
                 <div class="alert alert-danger">
                     <?= $_SESSION['error']; ?>
                 </div>
-
                 <?php unset($_SESSION['error']); ?>
-
             <?php } ?>
 
             <form method="POST">
 
                 <!-- laboratorium -->
                 <div class="mb-4">
-
-                    <label class="form-label">
-                        Pilih Laboratorium
-                    </label>
-
+                    <label class="form-label">Pilih Laboratorium</label>
                     <select name="laboratorium_id" class="form-select" required>
-
                         <?php while ($lab = mysqli_fetch_assoc($queryLab)) { ?>
-
-                            <option value="<?= $lab['id']; ?>" <?php
+                            <option value="<?= $lab['id']; ?>" 
+                            <?php
                               if ($lab['id'] == $data['laboratorium_id']) {
                                   echo "selected";
                               }
                               ?>>
-
                                 <?= htmlspecialchars($lab['nama_lab']); ?>
-
                             </option>
-
                         <?php } ?>
-
                     </select>
-
                 </div>
 
                 <!-- tanggal -->
                 <div class="mb-4">
-
-                    <label class="form-label">
-                        Tanggal
-                    </label>
-
-                    <input type="date" name="tanggal" class="form-control" value="<?= $data['tanggal']; ?>" required>
-
+                    <label class="form-label">Tanggal</label>
+                    <input type="date" name="tanggal" class="form-control" 
+                    value="<?= $data['tanggal']; ?>" required>
                 </div>
 
                 <!-- waktu -->
                 <div class="mb-4">
-
-                    <label class="form-label">
-                        Pilih Waktu
-                    </label>
+                    <label class="form-label">Pilih Waktu</label>
 
                     <div class="radio-group">
-
                         <?php foreach ($waktu as $jam) { ?>
-
                             <label class="radio-item">
-
-                                <input type="radio" name="waktu" value="<?= $jam; ?>" <?php
+                                <input type="radio" name="waktu" value="<?= $jam; ?>" 
+                                <?php
                                   if ($jam == $data['waktu']) {
                                       echo "checked";
                                   }
                                   ?> required>
-
                                 <?= $jam; ?>
-
                             </label>
-
                         <?php } ?>
-
                     </div>
-
                 </div>
 
                 <!-- tombol -->
                 <div class="button-group">
-                    <a href="dashboard.php" class="btn-cancel">
-                        Batalkan
-                    </a>
+                    <a href="dashboard.php" class="btn-cancel">Batalkan</a>
 
                     <button type="submit" name="submit" class="btn-submit">
-                        Tambah Peminjaman
-                    </button>
+                        Simpan Perubahan</button>
                 </div>
 
-
             </form>
-
         </div>
-
     </div>
-
 </body>
 
 </html>

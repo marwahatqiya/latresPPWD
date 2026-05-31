@@ -24,7 +24,8 @@ if (isset($_POST['register'])) {
     }
 
     // cek apakah email sdh pernah digunakan
-    $cek = mysqli_query($konek, "SELECT * FROM users WHERE email = '$email'");
+    $cek = mysqli_query($konek, "SELECT * FROM users 
+            WHERE email = '$email'");
     // kalo email sudah pernah dipake
     if (mysqli_num_rows($cek) > 0) {
         $_SESSION['error'] = "Email sudah digunakan!";
@@ -34,7 +35,8 @@ if (isset($_POST['register'])) {
         // mengacak password sebelum dimasukan ke database
         $hash = password_hash($password, PASSWORD_DEFAULT);
         // menyimpan data baru setelah dilakukan pengecekan
-        $query = "INSERT INTO users(email, name, password) VALUES('$email', '$username', '$hash')";
+        $query = "INSERT INTO users(email, name, password) 
+                VALUES('$email', '$username', '$hash')";
         // menjalankan $query
         if (mysqli_query($konek, $query)) {
             $_SESSION['success'] = "Registrasi berhasil! Silahkan login.";
@@ -191,8 +193,7 @@ if (isset($_POST['register'])) {
         <div class="left-side">
 
             <!-- lapisan transaparan diatas background -->
-            <div class="overlay">
-            </div>
+            <div class="overlay"></div>
 
         </div>
 
@@ -227,7 +228,6 @@ if (isset($_POST['register'])) {
 
                     <!-- yang buat kotak input melayang -->
                     <div class="form-floating mb-3">
-
                         <!-- input email, wajib diisi (require), for sama id harus sam -->
                         <input type="email" name="email" class="form-control" id="floatingEmail" placeholder="Email"
                             required>
@@ -259,12 +259,8 @@ if (isset($_POST['register'])) {
                     <!-- tombol login -->
                     <p><b>Sudah punya akun? <a href="login.php">Login</a></b></p>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 </body>
-
 </html>

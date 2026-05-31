@@ -12,20 +12,14 @@ if (!isset($_SESSION['id'])) {
 $currentPage = "add";
 
 // array waktu
-$waktu = [
-    "08:00",
-    "10:30",
-    "13:00",
-    "15:30"
-];
+$waktu = ["08:00", "10:30", "13:00", "15:30"];
 
 // ambil data laboratorium
 $queryLab = mysqli_query($konek, "SELECT * FROM laboratorium");
 
 // cek tombol submit ditekan
 if (isset($_POST['submit'])) {
-
-// ambil data dari form
+    // ambil data dari form
     $laboratorium_id = $_POST['laboratorium_id'];
     $tanggal = $_POST['tanggal'];
     $waktu_pilih = $_POST['waktu'];
@@ -44,10 +38,9 @@ if (isset($_POST['submit'])) {
         $_SESSION['error'] = "Lab sudah dipinjam di hari dan jam tersebut!";
         header("Location: add.php");
         exit;
-        
+
         // kalo masi kosong
     } else {
-
         // ambil user login
         $user_id = $_SESSION['id'];
         // cek data kosong, kalo kosong error, harus isi semua
@@ -57,7 +50,6 @@ if (isset($_POST['submit'])) {
             empty($tanggal) ||
             empty($waktu_pilih)
         ) {
-
             $_SESSION['error'] = "Data belum lengkap!";
             header("Location: add.php");
             exit;
@@ -68,8 +60,7 @@ if (isset($_POST['submit'])) {
             $konek,
             "INSERT INTO peminjaman
             (user_id, laboratorium_id, tanggal, waktu, created_at)
-            VALUES
-            ('$user_id', '$laboratorium_id', '$tanggal', '$waktu_pilih', NOW())"
+            VALUES ('$user_id', '$laboratorium_id', '$tanggal', '$waktu_pilih', NOW())"
         );
 
         // succes message, lanjut ke dashboard
@@ -275,41 +266,29 @@ if (isset($_POST['submit'])) {
 
     <!-- navbar -->
     <div class="navbar-custom">
-
         <!-- logo -->
-        <div class="logo">
-            C
-        </div>
-
+        <div class="logo">C</div>
         <!-- menu -->
         <div class="menu">
             <a href="dashboard.php" class="<?= ($currentPage == 'home') ? 'active-menu' : ''; ?>">Home</a>
             <a href="riwayat.php" class="<?= ($currentPage == 'riwayat') ? 'active-menu' : ''; ?>">Riwayat</a>
             <a href="logout.php">Logout</a>
         </div>
-
     </div>
-
 
     <!-- form -->
     <div class="form-section">
 
         <div class="form-box">
-
-            <h1 class="form-title">
-                Tambah Peminjaman
-            </h1>
+            <h1 class="form-title">Tambah Peminjaman </h1>
 
             <!-- alert, kalo ada error di session -->
             <?php if (isset($_SESSION['error'])) { ?>
-
                 <div class="alert alert-danger">
                     <?= $_SESSION['error']; ?>
                 </div>
-
                 <!-- menghapus session error setelah ditampilkan biar ga muncul terus -->
                 <?php unset($_SESSION['error']); ?>
-
             <?php } ?>
 
             <!-- data form di kirim pake method post -->
@@ -317,86 +296,52 @@ if (isset($_POST['submit'])) {
 
                 <!-- laboratorium -->
                 <div class="mb-4">
-
-                    <label class="form-label">
-                        Pilih Laboratorium
-                    </label>
+                    <label class="form-label"> Pilih Laboratorium </label>
 
                     <!-- dropdown -->
                     <select name="laboratorium_id" class="form-select" required>
-
-                        <option value="">
-                            -- Pilih Laboratorium --
-                        </option>
-
+                        <option value="">-- Pilih Laboratorium --</option>
                         <!-- ngambil data satu persatu dr query -->
                         <?php while ($lab = mysqli_fetch_assoc($queryLab)) { ?>
-
                             <!-- yang dikirim ke database adalah id lab -->
                             <option value="<?= $lab['id']; ?>">
                                 <?= htmlspecialchars($lab['nama_lab']); ?>
                             </option>
-
                         <?php } ?>
-
                     </select>
-
                 </div>
 
                 <!-- tanggal -->
                 <div class="mb-4">
-
-                    <label class="form-label">
-                        Tanggal
-                    </label>
-
+                    <label class="form-label"> Tanggal</label>
                     <!-- input tanggal -->
                     <input type="date" name="tanggal" class="form-control" required>
-
                 </div>
 
                 <!-- waktu -->
-                <div class="mb-4">
-
-                    <label class="form-label">
-                        Pilih Waktu
-                    </label>
-
+                <dviv class="mb-4">
+                    <label class="form-label"> Pilih Waktu </label>
                     <div class="radio-group">
-
                         <!-- loop array waktu -->
                         <?php foreach ($waktu as $jam) { ?>
-
                             <label class="radio-item">
-
                                 <input type="radio" name="waktu" value="<?= $jam; ?>" required>
                                 <?= $jam; ?>
-
                             </label>
-
                         <?php } ?>
-
                     </div>
-
-                </div>
+                </dviv>
 
                 <!-- tombol -->
                 <div class="button-group">
-                    <a href="dashboard.php" class="btn-cancel">
-                        Batalkan
-                    </a>
-
+                    <a href="dashboard.php" class="btn-cancel"> Batalkan</a>
                     <button type="submit" name="submit" class="btn-submit">
                         Tambah Peminjaman
                     </button>
                 </div>
-
             </form>
-
         </div>
-
     </div>
-
 </body>
 
 </html>

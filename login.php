@@ -8,7 +8,10 @@ if (isset($_POST['login'])) {
     $password = $_POST['password'];
 
     // mencari username di database
-    $query = mysqli_query($konek, "SELECT * FROM users WHERE name = '$username'");
+    $query = mysqli_query($konek, 
+    "SELECT * FROM users 
+    WHERE name = '$username'");
+
     if (mysqli_num_rows($query) > 0) {
         // mengambil data user
         $data = mysqli_fetch_assoc($query);
@@ -196,19 +199,22 @@ if (isset($_POST['login'])) {
                 <!-- form -->
                 <form action="" method="POST">
                     <div class="form-floating mb-3">
-                        <input type="text" name="username" class="form-control" id="floatingUsername"
+                        <input type="text" name="username" 
+                            class="form-control" id="floatingUsername"
                             placeholder="Username" required>
                         <label for="floatingUsername"><b>Username</b></label>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input type="password" name="password" class="form-control" id="floatingPassword"
+                        <input type="password" name="password" 
+                            class="form-control" id="floatingPassword"
                             placeholder="Password" required>
                         <label for="floatingPassword"><b>Password</b></label>
                     </div>
 
                     <!-- tombol login -->
-                    <button type="submit" name="login" class="btn btn-primary w-100"><b>Masuk</b></button>
+                    <button type="submit" name="login" 
+                            class="btn btn-primary w-100"><b>Masuk</b></button>
                 </form>
 
                 <div class="register">
@@ -221,8 +227,6 @@ if (isset($_POST['login'])) {
         <div class="right-side">
             <div class="overlay"></div>
         </div>
-
-
     </div>
 </body>
 

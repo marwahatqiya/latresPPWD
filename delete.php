@@ -18,8 +18,7 @@ $id = $_GET['id'];
 
 // ambil data peminjaman
 $query = mysqli_query($konek,
-    "SELECT peminjaman.*,
-            laboratorium.nama_lab
+    "SELECT peminjaman.*, laboratorium.nama_lab
     FROM peminjaman
     JOIN laboratorium
     ON peminjaman.laboratorium_id = laboratorium.id
@@ -36,14 +35,10 @@ if (!$data) {
 
 // proses hapus
 if (isset($_POST['hapus'])) {
-
-    mysqli_query($konek,
-        "DELETE FROM peminjaman
-        WHERE id = '$id'"
-    );
+    mysqli_query($konek,"DELETE FROM peminjaman
+        WHERE id = '$id'");
 
     $_SESSION['success'] = "Data berhasil dihapus";
-
     header("Location: dashboard.php");
     exit;
 }
@@ -224,20 +219,14 @@ if (isset($_POST['hapus'])) {
 </head>
 
 <body>
-
     <!-- navbar -->
     <div class="navbar-custom">
-
-        <div class="logo">
-            C
-        </div>
-
+        <div class="logo">C</div>
         <div class="menu">
             <a href="dashboard.php">Home</a>
             <a href="riwayat.php">Riwayat</a>
             <a href="logout.php">Logout</a>
         </div>
-
     </div>
 
     <!-- delete section -->
@@ -245,27 +234,20 @@ if (isset($_POST['hapus'])) {
 
         <div class="delete-box">
 
-            <h1 class="delete-title">
-                Hapus Peminjaman
-            </h1>
+            <h1 class="delete-title">Hapus Peminjaman</h1>
 
             <div class="delete-info">
-
-                <p>
-                    Laboratorium:
+                <p>Laboratorium:
                     <?= htmlspecialchars($data['nama_lab']); ?>
                 </p>
 
-                <p>
-                    Tanggal:
+                <p>Tanggal:
                     <?= $data['tanggal']; ?>
                 </p>
 
-                <p>
-                    Waktu:
+                <p>Waktu:
                     <?= $data['waktu']; ?>
                 </p>
-
             </div>
 
             <h5>
@@ -273,30 +255,18 @@ if (isset($_POST['hapus'])) {
             </h5>
 
             <form method="POST">
-
                 <div class="button-group">
+                    <a href="dashboard.php" class="btn-cancel">
+                        Batal</a>
 
-                    <a href="dashboard.php"
-                        class="btn-cancel">
-                        Batal
-                    </a>
-
-                    <button type="submit"
-                        name="hapus"
-                        class="btn-delete">
-
-                        Hapus
-
-                    </button>
+                    <button type="submit"name="hapus" class="btn-delete">
+                        Hapus</button>
 
                 </div>
 
             </form>
-
         </div>
-
     </div>
-
 </body>
 
 </html>
